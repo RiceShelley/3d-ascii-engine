@@ -2,7 +2,7 @@
 
 
 #define S_WIDTH 220
-#define S_HEIGHT 57
+#define S_HEIGHT 56
 
 char *screen[S_HEIGHT];
 
@@ -41,3 +41,9 @@ bool write_screen(int x, int y, char c) {
 	return 1;
 }
 
+char get_sc_char(int x, int y) {	
+	if (x > S_WIDTH - 1 || x < 0 || y > S_HEIGHT - 1 || y < 0) {
+		return 0;		
+	}
+	return screen[y][x];
+}

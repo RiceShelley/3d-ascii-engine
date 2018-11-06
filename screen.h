@@ -14,5 +14,6 @@ void init_screen();
 void output_screen();
 void clear_screen(char c);
 bool write_screen(int x, int y, char c);
+char get_sc_char(int x, int y);
 
 #endif
