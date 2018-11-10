@@ -1,4 +1,4 @@
-CC = gcc
+CC = g++
 
 make:
-	$(CC) main.c screen.c vector.c
+	$(CC) main.cpp screen.cpp vector.cpp worldObj.cpp wObjCreator.cpp -lncurses
