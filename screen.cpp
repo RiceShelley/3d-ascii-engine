@@ -6,6 +6,17 @@ void Screen::init_screen() {
 	curs_set(FALSE);
 	timeout(30);
 	cbreak();
+	// lets make some colors
+	start_color();
+	init_pair(1, COLOR_GREEN, COLOR_MAGENTA);
+	init_pair(2, COLOR_GREEN, COLOR_BLACK);
+	init_pair(3, COLOR_YELLOW, COLOR_BLACK);
+	init_pair(4, COLOR_CYAN, COLOR_BLACK);
+	init_pair(5, COLOR_BLUE, COLOR_BLACK);
+	init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
+	init_pair(7, COLOR_WHITE, COLOR_BLACK);
+	wbkgd(stdscr, COLOR_PAIR(2));
+	attron(COLOR_PAIR(1));
 	refresh();
 	getmaxyx(stdscr, s_height, s_width);
 	cx = s_width / 2;

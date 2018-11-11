@@ -1,15 +1,15 @@
 #include "include/wObjCreator.hpp"
 
-void ObjCreator::construct_rect(WorldObj *obj) {
-    obj->add_vertex(Vector(1, 1, 0));
-    obj->add_vertex(Vector(1, -1, 0));
-    obj->add_vertex(Vector(-1, 1, 0));
-    obj->add_vertex(Vector(-1, -1, 0));
+void ObjCreator::construct_box(WorldObj *obj, double x, double y, double z) {
+    obj->add_vertex(Vector(x, y, -z));
+    obj->add_vertex(Vector(x, -y, -z));
+    obj->add_vertex(Vector(-x, y, -z));
+    obj->add_vertex(Vector(-x, -y, -z));
 
-    obj->add_vertex(Vector(1, 1, 5));
-    obj->add_vertex(Vector(1, -1, 5));
-    obj->add_vertex(Vector(-1, 1, 5));
-    obj->add_vertex(Vector(-1, -1, 5));
+    obj->add_vertex(Vector(x, y, z));
+    obj->add_vertex(Vector(x, -y, z));
+    obj->add_vertex(Vector(-x, y, z));
+    obj->add_vertex(Vector(-x, -y, z));
 
     obj->add_edge({0, 1});
     obj->add_edge({2, 3});

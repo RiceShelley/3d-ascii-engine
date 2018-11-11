@@ -7,7 +7,7 @@
 class ObjCreator {
 
     public:
-        void construct_rect(WorldObj *obj);
+        void construct_box(WorldObj *obj, double x, double y, double z);
         void construct_cube(WorldObj *obj, double size);
 
     private:

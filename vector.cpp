@@ -1,9 +1,9 @@
 #include "include/vector.hpp"
 
 Vector::Vector() {
-	Vector::x = x;
-	Vector::y = y;
-	Vector::z = z;
+	Vector::x = 0;
+	Vector::y = 0;
+	Vector::z = 0;
 }
 
 Vector::Vector(double x, double y, double z) {
