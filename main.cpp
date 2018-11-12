@@ -46,10 +46,10 @@ void start_screen() {
 		}
 		v.x += xdir;
 		v.y += ydir;
-		cube.obj_set_pos(v);		sc.clear_screen();
+		cube.obj_set_pos(v);		
+		sc.clear_screen();
 		cube.render(&sc);
 		move(0, 0);
-		printw("x = %f y = %f", v.x, v.y);
 		int x, y;
 		getmaxyx(stdscr, y, x);
 		y /= 3;
@@ -70,8 +70,10 @@ void start_screen() {
 		y += 6;
 		move(y + 1, x + 10);
 		printw("With love, by Rice Shelley");
-		move(y + 3, x + 20);
-		printw("Eat your heart your vulkan");
+		move(y + 2, x + 10);
+		printw("       + emotional support from Viyi");
+		move(y + 4, x + 24);
+		printw("Eat your heart out Vulkan");
 		move(y + 10, x + 15);
 		printw("Press p to play, e to exit");
 		sc.output_screen();
@@ -122,7 +124,7 @@ void gameloop() {
 	while (true) {
 
 		if (rand() % 100 < 10) {
-			int pos = rand() % 20;
+			int pos = rand() % 10;
 			WorldObj *obj = new WorldObj(pos - 3, 0, 30);
 			woc.construct_cube(obj, .5);
 			world.push_back(obj);
@@ -164,7 +166,6 @@ void gameloop() {
 
 		move(0, 0);
 		player_pos = floor.get_pos().x;
-		printw("%f", player_pos);
 
 		// render world
 		Vector v = ceiling.get_pos();	

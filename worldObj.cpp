@@ -127,7 +127,7 @@ void WorldObj::render(Screen *s) {
         double x2 = points[(int) edges.at(i).y].x;
         double y2 = points[(int) edges.at(i).y].y * -1;
 
-        double slope = (y2 - y1) / (x2- x1);
+        double slope = (y2 - y1) / (x2 - x1);
 
         char c = 0;
         if (slope < -.2) {
