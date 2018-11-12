@@ -27,20 +27,35 @@ bool run = true;
 
 void start_screen() {
 	attron(COLOR_PAIR(3));
-	WorldObj cube(5, 0, 15);
-	woc.construct_cube(&cube, 1);
+	WorldObj cube(0, 0, 13);
+	woc.construct_box(&cube, 1, 1, 1);
 	world.push_back(&cube);
 
+	double xdir = .01;
+	double ydir = .01;
 	while (true) {
 		cube.rx += .01;
 		cube.ry += .008;
 		cube.rz += .01;
-		sc.clear_screen();
+		Vector v = cube.get_pos();
+		if (v.x > 4 || v.x < -4) {
+			xdir *= -1;
+		}
+		if (v.y > 1.2 || v.y < -.2) {
+			ydir *= -1;
+		}
+		v.x += xdir;
+		v.y += ydir;
+		cube.obj_set_pos(v);		sc.clear_screen();
 		cube.render(&sc);
+		move(0, 0);
+		printw("x = %f y = %f", v.x, v.y);
 		int x, y;
 		getmaxyx(stdscr, y, x);
 		y /= 3;
-		x /= 4;
+		x /= 2;
+		x -= 40;
+		y += 10;
 		move(y, x);
 		printw(" __   __     ______     __  __     ______      ______     ______     __   __    ");
 		move(y + 1, x);
@@ -51,13 +66,12 @@ void start_screen() {
 		printw(" \\ \\_\\\\\"\\_\\  \\ \\_____\\   /\\_\\/\\_\\    \\ \\_\\     \\ \\_____\\  \\ \\_____\\  \\ \\_\\\\\"\\_\\ ");
 		move(y + 4, x);
 		printw("  \\/_/ \\/_/   \\/_____/   \\/_/\\/_/     \\/_/      \\/_____/   \\/_____/   \\/_/ \\/_/ ");
-
 		x += 10;
 		y += 6;
 		move(y + 1, x + 10);
 		printw("With love, by Rice Shelley");
 		move(y + 3, x + 20);
-		printw("Eat your heart our vulkan");
+		printw("Eat your heart your vulkan");
 		move(y + 10, x + 15);
 		printw("Press p to play, e to exit");
 		sc.output_screen();
@@ -213,11 +227,11 @@ void gameloop() {
 					move((int) sc.get_cy(), (int) sc.get_cx());
 					printw("GAME OVER.\n");
 					move((int) sc.get_cy() + 1, (int) sc.get_cx());
-					printw("final score: %d", score);
+					printw("final score: %.1f", score);
 					move((int) sc.get_cy() + 2, (int) sc.get_cx());
 					printw("press any key to continue");
 					sc.output_screen();
-					usleep(100000);
+					usleep(1000000 * 2);
 					timeout(-1);
 					getch();
 					timeout(30);
@@ -227,8 +241,8 @@ void gameloop() {
 				world.erase(world.begin() + i);
 			}
 		}
-
 		sc.output_screen();
+		speed += .0001;
 		score += .5;
 		usleep(1000);
 	}
