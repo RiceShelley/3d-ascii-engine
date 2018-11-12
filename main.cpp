@@ -6,6 +6,9 @@
 #include <ncurses.h>
 #include <iostream>
 #include <vector>
+#include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
+#include <cstdlib>
 
 #include "include/screen.hpp"
 #include "include/vector.hpp"
@@ -16,8 +19,11 @@ Screen sc;
 ObjCreator woc;
 // collection of objects that make up world
 std::vector<WorldObj*> world;
-
-int map[1000];
+//path to music
+const char *musi_filename = "music.wav";
+// music
+Mix_Music *music = NULL;
+bool run = true;
 
 void start_screen() {
 	attron(COLOR_PAIR(3));
@@ -36,15 +42,31 @@ void start_screen() {
 		y /= 3;
 		x /= 4;
 		move(y, x);
-		printw("Next Gen");
+		printw(" __   __     ______     __  __     ______      ______     ______     __   __    ");
+		move(y + 1, x);
+		printw("/\\ \"-.\\ \\   /\\  ___\\   /\\_\\_\\_\\   /\\__  _\\    /\\  ___\\   /\\  ___\\   /\\ \"-.\\ \\   ");
+		move(y + 2, x);
+		printw("\\ \\ \\-.  \\  \\ \\  __\\   \\/_/\\_\\/_  \\/_/\\ \\/    \\ \\ \\__ \\  \\ \\  __\\   \\ \\ \\-.  \\  ");
+		move(y + 3, x);
+		printw(" \\ \\_\\\\\"\\_\\  \\ \\_____\\   /\\_\\/\\_\\    \\ \\_\\     \\ \\_____\\  \\ \\_____\\  \\ \\_\\\\\"\\_\\ ");
+		move(y + 4, x);
+		printw("  \\/_/ \\/_/   \\/_____/   \\/_/\\/_/     \\/_/      \\/_____/   \\/_____/   \\/_/ \\/_/ ");
+
+		x += 10;
+		y += 6;
 		move(y + 1, x + 10);
 		printw("With love, by Rice Shelley");
+		move(y + 3, x + 20);
+		printw("Eat your heart our vulkan");
 		move(y + 10, x + 15);
-		printw("Press p to play");
+		printw("Press p to play, e to exit");
 		sc.output_screen();
 		int k = getch();
 		if (k == 'p') {
 			world.pop_back();
+			return;
+		} else if (k == 'e') {
+			run = false;
 			return;
 		}
 		usleep(10000);
@@ -52,10 +74,11 @@ void start_screen() {
 	attron(COLOR_PAIR(1));
 }
 
-void gen_map() {
-	for (int i = 0; i < 1000; i++) {
-		map[i] = i % 20;
-	}
+void init_sdl() {
+	SDL_Init(SDL_INIT_EVERYTHING);
+	Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096);
+	music = Mix_LoadMUS(musi_filename);
+	Mix_PlayMusic(music, -1);
 }
 
 void gameloop() {
@@ -64,8 +87,6 @@ void gameloop() {
 	Vector crot(0, 0, 0);
 	double player_pos = 0;
 	double score = 0;
-
-	gen_map();
 
 	// construct world
 	WorldObj floor(6, 1, 21);
@@ -81,16 +102,18 @@ void gameloop() {
 	WorldObj wall_r(17, 0, 21);
 	woc.construct_box(&wall_r, .1, 1, 20);
 
-	for (int i = 0; i < 1000; i++) {
-		WorldObj *obj = new WorldObj(map[i] - 3, 0, 20 + i * 2);
-		woc.construct_cube(obj, .5);
-		world.push_back(obj);
-	}
-
 	double speed = .3;
 
 	// main game loop
 	while (true) {
+
+		if (rand() % 100 < 10) {
+			int pos = rand() % 20;
+			WorldObj *obj = new WorldObj(pos - 3, 0, 30);
+			woc.construct_cube(obj, .5);
+			world.push_back(obj);
+		}
+
 		// get player key input
 		int key_in = getch();
 
@@ -151,7 +174,6 @@ void gameloop() {
 		wall_r.obj_set_pos(v);
 		wall_r.render(&sc);
 
-		attron(COLOR_PAIR(6));
 		v = ceiling.get_pos();
 		v.x += cam.x;
 		ceiling.obj_set_pos(v);
@@ -192,8 +214,13 @@ void gameloop() {
 					printw("GAME OVER.\n");
 					move((int) sc.get_cy() + 1, (int) sc.get_cx());
 					printw("final score: %d", score);
+					move((int) sc.get_cy() + 2, (int) sc.get_cx());
+					printw("press any key to continue");
 					sc.output_screen();
-					usleep(1000000);
+					usleep(100000);
+					timeout(-1);
+					getch();
+					timeout(30);
 					return;
 				}
 				delete obj;
@@ -208,10 +235,11 @@ void gameloop() {
 }
 
 int main() {
+	init_sdl();
 	sc.init_screen();
 	clear();
 	start_screen();
-	while (true) {
+	while (run) {
 		gameloop();
 		start_screen();
 	}
